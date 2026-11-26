@@ -1,0 +1,160 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f1f5f9;
+}
+
+/* Header */
+.app-header {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 16px 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  font-size: 28px;
+}
+
+.brand-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.brand-tagline {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.header-kpis {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.kpi-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1e293b;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+}
+
+.kpi-dot {
+  font-size: 9px;
+}
+
+.kpi-dot.amber { color: #f59e0b; }
+.kpi-dot.blue { color: #3b82f6; }
+.kpi-dot.gray { color: #94a3b8; }
+
+.kpi-label {
+  color: #94a3b8;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* 3-column top wireframe grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.95fr 0.8fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.grid-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.section-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-host {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-fsm {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.section-heading {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Status board section */
+.status-board-section {
+  width: 100%;
+}
+
+/* Footer */
+.app-footer {
+  text-align: center;
+  padding: 18px 24px;
+  font-size: 12px;
+  color: #64748b;
+  border-top: 1px solid #e2e8f0;
+  background: #ffffff;
+}

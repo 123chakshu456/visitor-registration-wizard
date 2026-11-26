@@ -1,0 +1,329 @@
+.status-board-container {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.board-title {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.board-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.board-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-text {
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  color: #3b82f6;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-text:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.btn-text.danger {
+  color: #64748b;
+}
+
+.btn-text.danger:hover {
+  background: #f1f5f9;
+  color: #ef4444;
+}
+
+/* Filter Tab Bar */
+.filter-tab-bar {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #f1f5f9;
+  margin-bottom: 20px;
+  padding-bottom: 2px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 16px 10px 16px;
+  margin-bottom: -2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: #1e293b;
+}
+
+.tab-btn.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+.tab-count {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 700;
+}
+
+.tab-btn.active .tab-count {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge-amber {
+  background: #fef3c7 !important;
+  color: #b45309 !important;
+}
+
+.badge-blue {
+  background: #dbeafe !important;
+  color: #1d4ed8 !important;
+}
+
+/* Table */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.visits-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  text-align: left;
+}
+
+.visits-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.visits-table td {
+  padding: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.visit-row:hover {
+  background: #f8fafc;
+}
+
+/* Table cells */
+.id-badge {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.visitor-name {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+.visitor-contact {
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.purpose-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #f1f5f9;
+  color: #334155;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.host-name-cell {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.host-sub-cell {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* State Chips (Amber, Green, Red, Blue, Gray) */
+.state-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+}
+
+.state-dot {
+  font-size: 8px;
+}
+
+/* Amber: PENDING */
+.chip-amber {
+  background-color: #fffbeb;
+  color: #b45309;
+  border-color: #fde68a;
+}
+
+/* Green: APPROVED */
+.chip-green {
+  background-color: #f0fdf4;
+  color: #15803d;
+  border-color: #bbf7d0;
+}
+
+/* Red: DENIED */
+.chip-red {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+/* Blue: CHECKED_IN */
+.chip-blue {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+/* Gray: CHECKED_OUT */
+.chip-gray {
+  background-color: #f8fafc;
+  color: #475569;
+  border-color: #e2e8f0;
+}
+
+/* Actions Group */
+.action-buttons-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-approve {
+  background-color: #16a34a;
+  color: #ffffff;
+}
+
+.btn-approve:hover {
+  background-color: #15803d;
+}
+
+.btn-reject {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+.btn-reject:hover {
+  background-color: #b91c1c;
+}
+
+.btn-check-in {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.btn-check-in:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-check-out {
+  background-color: #475569;
+  color: #ffffff;
+}
+
+.btn-check-out:hover {
+  background-color: #334155;
+}
+
+.no-actions-text {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+/* Empty State */
+.empty-board-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  color: #94a3b8;
+  gap: 8px;
+}
+
+.empty-board-icon {
+  font-size: 28px;
+}
+
+.empty-board-text {
+  font-size: 14px;
+}

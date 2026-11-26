@@ -1,0 +1,198 @@
+<div class="status-board-container">
+  <div class="board-header">
+    <div class="board-title-group">
+      <h2 class="board-title">Today's Visitor Status Board</h2>
+      <p class="board-subtitle">Live real-time state machine enforcing valid transition rules</p>
+    </div>
+
+    <!-- Quick action controls -->
+    <div class="board-actions">
+      <button type="button" class="btn-text" (click)="seedSampleData()" title="Populate with sample visitors across states">
+        + Load Test Data
+      </button>
+      <button type="button" class="btn-text danger" (click)="resetData()" title="Reset to initial assignment state">
+        ↺ Reset Board
+      </button>
+    </div>
+  </div>
+
+  <!-- Stretch Goal: Filter Tab Bar with Live Counts -->
+  <div class="filter-tab-bar">
+    <button
+      type="button"
+      class="tab-btn"
+      [class.active]="currentFilter() === 'ALL'"
+      (click)="setFilter('ALL')"
+      id="tab-all"
+    >
+      <span class="tab-label">All</span>
+      <span class="tab-count">{{ allCount() }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-btn"
+      [class.active]="currentFilter() === 'PENDING'"
+      (click)="setFilter('PENDING')"
+      id="tab-pending"
+    >
+      <span class="tab-label">Pending</span>
+      <span class="tab-count badge-amber">{{ pendingCount() }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-btn"
+      [class.active]="currentFilter() === 'ON_PREMISES'"
+      (click)="setFilter('ON_PREMISES')"
+      id="tab-on-premises"
+    >
+      <span class="tab-label">On premises</span>
+      <span class="tab-count badge-blue">{{ onPremisesCount() }}</span>
+    </button>
+  </div>
+
+  <!-- Visitors Table -->
+  <div class="table-responsive">
+    <table class="visits-table">
+      <thead>
+        <tr>
+          <th style="width: 100px;">Visit ID</th>
+          <th>Visitor Details</th>
+          <th>Purpose</th>
+          <th>Host Employee</th>
+          <th style="width: 140px;">State</th>
+          <th style="width: 190px;">Actions (State-Enforced)</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (filteredVisits().length === 0) {
+          <tr class="empty-row">
+            <td colspan="6">
+              <div class="empty-board-state">
+                <span class="empty-board-icon">📋</span>
+                <span class="empty-board-text">
+                  @if (currentFilter() === 'PENDING') {
+                    No pending visitors waiting for host approval.
+                  } @else if (currentFilter() === 'ON_PREMISES') {
+                    No visitors currently on premises (checked in).
+                  } @else {
+                    No visitors registered yet. Use the wizard to register one.
+                  }
+                </span>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (visit of filteredVisits(); track visit.id) {
+            <tr class="visit-row" [attr.id]="'visit-row-' + visit.id">
+              <td class="col-id">
+                <span class="id-badge">{{ visit.id }}</span>
+              </td>
+              <td class="col-visitor">
+                <div class="visitor-name">{{ visit.visitor.name }}</div>
+                <div class="visitor-contact">{{ visit.visitor.contact }}</div>
+              </td>
+              <td class="col-purpose">
+                <span class="purpose-tag">{{ visit.purpose }}</span>
+              </td>
+              <td class="col-host">
+                @if (getHost(visit.hostEmployee); as host) {
+                  <div class="host-name-cell">{{ host.name }}</div>
+                  <div class="host-sub-cell">{{ host.id }} @if (host.department) { · {{ host.department }} }</div>
+                } @else {
+                  <div class="host-name-cell">{{ visit.hostEmployee }}</div>
+                }
+              </td>
+              <td class="col-state">
+                <!-- State Chips (Amber, Green, Red, Blue, Gray) -->
+                @switch (visit.state) {
+                  @case ('PENDING') {
+                    <span class="state-chip chip-amber" id="chip-{{ visit.id }}">
+                      <span class="state-dot">●</span> PENDING
+                    </span>
+                  }
+                  @case ('APPROVED') {
+                    <span class="state-chip chip-green" id="chip-{{ visit.id }}">
+                      <span class="state-dot">●</span> APPROVED
+                    </span>
+                  }
+                  @case ('DENIED') {
+                    <span class="state-chip chip-red" id="chip-{{ visit.id }}">
+                      <span class="state-dot">●</span> DENIED
+                    </span>
+                  }
+                  @case ('CHECKED_IN') {
+                    <span class="state-chip chip-blue" id="chip-{{ visit.id }}">
+                      <span class="state-dot">●</span> CHECKED_IN
+                    </span>
+                  }
+                  @case ('CHECKED_OUT') {
+                    <span class="state-chip chip-gray" id="chip-{{ visit.id }}">
+                      <span class="state-dot">●</span> CHECKED_OUT
+                    </span>
+                  }
+                }
+              </td>
+              <td class="col-actions">
+                <!-- State Machine Action Buttons: Strictly governed by current state -->
+                @switch (visit.state) {
+                  @case ('PENDING') {
+                    <div class="action-buttons-group">
+                      <button
+                        type="button"
+                        class="btn-action btn-approve"
+                        (click)="onApprove(visit)"
+                        [attr.id]="'approve-btn-' + visit.id"
+                        title="Host approves visitor entry"
+                      >
+                        ✓ Approve
+                      </button>
+                      <button
+                        type="button"
+                        class="btn-action btn-reject"
+                        (click)="onReject(visit)"
+                        [attr.id]="'reject-btn-' + visit.id"
+                        title="Host rejects visitor entry"
+                      >
+                        ✕ Reject
+                      </button>
+                    </div>
+                  }
+                  @case ('APPROVED') {
+                    <div class="action-buttons-group">
+                      <button
+                        type="button"
+                        class="btn-action btn-check-in"
+                        (click)="onCheckIn(visit)"
+                        [attr.id]="'checkin-btn-' + visit.id"
+                        title="Front desk checks in visitor upon arrival"
+                      >
+                        📥 Check in
+                      </button>
+                    </div>
+                  }
+                  @case ('CHECKED_IN') {
+                    <div class="action-buttons-group">
+                      <button
+                        type="button"
+                        class="btn-action btn-check-out"
+                        (click)="onCheckOut(visit)"
+                        [attr.id]="'checkout-btn-' + visit.id"
+                        title="Visitor departs the office"
+                      >
+                        📤 Check out
+                      </button>
+                    </div>
+                  }
+                  @default {
+                    <!-- Terminal states DENIED and CHECKED_OUT: no buttons remain -->
+                    <span class="no-actions-text">—</span>
+                  }
+                }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

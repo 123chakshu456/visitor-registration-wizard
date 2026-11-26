@@ -1,0 +1,75 @@
+<div class="host-simulation-panel">
+  <!-- Host Notification Box from Wireframe -->
+  <div class="notification-card">
+    <div class="notif-header">
+      <span class="bell-icon">🔔</span>
+      <h4 class="notif-title">Host Notification Simulation</h4>
+    </div>
+
+    @if (latestPending(); as visit) {
+      <div class="notif-content">
+        <div class="waiting-headline">
+          <strong>{{ visit.visitor.name }}</strong> is waiting
+        </div>
+        <div class="waiting-sub">
+          Purpose: <span>{{ visit.purpose }}</span>
+        </div>
+        <div class="waiting-host">
+          Host: <span>{{ getHostName(visit.hostEmployee) }}</span>
+        </div>
+
+        <div class="notif-actions">
+          <button
+            type="button"
+            class="btn-sm btn-approve"
+            (click)="approve(visit.id)"
+          >
+            Approve
+          </button>
+          <button
+            type="button"
+            class="btn-sm btn-reject"
+            (click)="reject(visit.id)"
+          >
+            Reject
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="notif-empty">
+        <span>No visitors waiting for host decision right now.</span>
+      </div>
+    }
+
+    <div class="notif-footer-notes">
+      <div class="footer-note approved-note">APPROVED → QR badge issued</div>
+      <div class="footer-note denied-note">DENIED → security notified</div>
+      <div class="footer-note error-note">Approve a DENIED request → blocked</div>
+    </div>
+  </div>
+
+  <!-- Pre-approval pass / QR preview from Wireframe -->
+  <div class="pass-card">
+    <h4 class="pass-title">Pre-approval pass</h4>
+    <div class="pass-window">Window: 10:00 – 18:00 today</div>
+
+    <div class="pass-body">
+      <div class="qr-mock">
+        <div class="qr-box">
+          <span class="qr-inner">QR</span>
+        </div>
+      </div>
+      <div class="pass-meta">
+        @if (latestApproved(); as approved) {
+          <div class="pass-visitor-name">{{ approved.visitor.name }}</div>
+          <div class="pass-status-text">
+            Status: <strong>{{ approved.state }}</strong>
+          </div>
+        } @else {
+          <div class="pass-placeholder">Approve a visitor to preview digital pass</div>
+        }
+        <div class="pass-policy">Max 5 pre-approvals / employee / day</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,329 @@
+<div class="wizard-container" [formGroup]="wizardForm">
+  <!-- Wizard Progress Stepper -->
+  <div class="stepper-header">
+    <div class="step-indicator" [class.active]="currentStep() === 1" [class.completed]="currentStep() > 1" (click)="goToStep(1)">
+      <div class="step-circle">1</div>
+      <div class="step-label">Visitor Details</div>
+    </div>
+    <div class="step-line" [class.completed]="currentStep() > 1"></div>
+    <div class="step-indicator" [class.active]="currentStep() === 2" [class.completed]="currentStep() > 2" (click)="goToStep(2)">
+      <div class="step-circle">2</div>
+      <div class="step-label">Visit Details</div>
+    </div>
+    <div class="step-line" [class.completed]="currentStep() > 2"></div>
+    <div class="step-indicator" [class.active]="currentStep() === 3" (click)="goToStep(3)">
+      <div class="step-circle">3</div>
+      <div class="step-label">Review & Submit</div>
+    </div>
+  </div>
+
+  <!-- Success Notification -->
+  @if (submissionSuccess()) {
+    <div class="alert alert-success">
+      <span class="alert-icon">✓</span>
+      <span>{{ submissionSuccess() }}</span>
+    </div>
+  }
+
+  <!-- STEP 1: VISITOR DETAILS -->
+  @if (currentStep() === 1) {
+    <div class="step-content" formGroupName="visitor">
+      <h3 class="step-title">Step 1 — Visitor Details</h3>
+      <p class="step-desc">Enter the visitor's primary identity and contact details.</p>
+
+      <div class="form-group">
+        <label for="visitor-name">
+          Full Name <span class="required-star">*</span>
+        </label>
+        <input
+          id="visitor-name"
+          type="text"
+          formControlName="name"
+          placeholder="e.g. Priya Sharma"
+          class="form-control"
+          [class.input-invalid]="nameControl.invalid && (nameControl.touched || nameControl.dirty)"
+        />
+        
+        @if (nameControl.invalid && (nameControl.touched || nameControl.dirty)) {
+          <div class="error-msg" id="name-error">
+            @if (nameControl.errors?.['required']) {
+              <span>Name is required</span>
+            } @else if (nameControl.errors?.['minlength']) {
+              <span>min 3 characters</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="visitor-contact">
+          Contact Number <span class="required-star">*</span>
+        </label>
+        <input
+          id="visitor-contact"
+          type="text"
+          formControlName="contact"
+          placeholder="e.g. +91-9812341234 or 9812341234"
+          class="form-control"
+          [class.input-invalid]="contactControl.invalid && (contactControl.touched || contactControl.dirty)"
+        />
+        <div class="format-hint">
+          Format hint: 10 digits with optional +91 prefix (e.g. +91-9812341234 or 9812341234)
+        </div>
+
+        @if (contactControl.invalid && (contactControl.touched || contactControl.dirty)) {
+          <div class="error-msg" id="contact-error">
+            @if (contactControl.errors?.['required']) {
+              <span>Contact number is required</span>
+            } @else if (contactControl.errors?.['pattern']) {
+              <span>Invalid format. Must be 10 digits (optional +91 prefix). Internal hyphens or &lt;10 digits not allowed.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Photo Mock placeholder from wireframe -->
+      <div class="photo-placeholder">
+        <div class="photo-icon">📷</div>
+        <span class="photo-text">Visitor Badge Photo (Auto-captured at kiosk)</span>
+      </div>
+
+      <div class="step-actions right">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!isStep1Valid"
+          (click)="nextFromStep1()"
+          id="step1-next-btn"
+        >
+          Next: Visit Details →
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- STEP 2: VISIT DETAILS -->
+  @if (currentStep() === 2) {
+    <div class="step-content" formGroupName="visit">
+      <h3 class="step-title">Step 2 — Visit Details</h3>
+      <p class="step-desc">Select the purpose of visit and specify the employee host.</p>
+
+      <div class="form-group">
+        <label for="visit-purpose">
+          Purpose of Visit <span class="required-star">*</span>
+        </label>
+        <select
+          id="visit-purpose"
+          formControlName="purpose"
+          class="form-control"
+          [class.input-invalid]="purposeControl.invalid && (purposeControl.touched || purposeControl.dirty)"
+        >
+          <option value="" disabled selected>-- Select Purpose --</option>
+          @for (p of purposes; track p) {
+            <option [value]="p">{{ p }}</option>
+          }
+        </select>
+
+        @if (purposeControl.invalid && (purposeControl.touched || purposeControl.dirty)) {
+          <div class="error-msg">
+            <span>Purpose is required</span>
+          </div>
+        }
+      </div>
+
+      <div class="form-group host-picker-container">
+        <label for="host-search">
+          Host Employee <span class="required-star">*</span>
+        </label>
+        
+        <div class="host-input-wrapper">
+          <input
+            id="host-search"
+            type="text"
+            [value]="hostSearchQuery()"
+            (input)="onHostInput($event)"
+            (focus)="openHostDropdown()"
+            placeholder="Type to filter host (e.g. Manish, EMP-77, Sricharan)..."
+            class="form-control"
+            [class.input-invalid]="hostControl.invalid && hostControl.touched"
+          />
+          @if (hostControl.value) {
+            <button
+              type="button"
+              class="clear-host-btn"
+              (click)="clearHostSelection()"
+              title="Change host"
+            >
+              ✕
+            </button>
+          }
+        </div>
+
+        <!-- Selected Host Tag -->
+        @if (selectedHost(); as host) {
+          <div class="selected-host-chip">
+            <span class="chip-avatar">{{ host.name.charAt(0) }}</span>
+            <div class="chip-details">
+              <strong>{{ host.name }}</strong>
+              <span class="chip-sub">({{ host.id }} @if (host.department) { · {{ host.department }} })</span>
+            </div>
+            <span class="chip-check">✓ Selected</span>
+          </div>
+        }
+
+        <!-- Dropdown with Type-to-Filter Results -->
+        @if (isHostDropdownOpen()) {
+          <div class="host-dropdown-menu">
+            <div class="dropdown-header">Available Host Employees:</div>
+            
+            @if (filteredHosts().length === 0) {
+              <div class="empty-state-hosts">
+                <span class="empty-icon">⚠️</span>
+                <span>no hosts found</span>
+              </div>
+            } @else {
+              <ul class="host-list">
+                @for (h of filteredHosts(); track h.id) {
+                  <li
+                    class="host-item"
+                    [class.selected]="hostControl.value === h.id"
+                    (click)="selectHost(h)"
+                  >
+                    <div class="host-avatar">{{ h.name.charAt(0) }}</div>
+                    <div class="host-info">
+                      <span class="host-name">{{ h.name }}</span>
+                      <span class="host-id-dept">{{ h.id }} @if (h.department) { · {{ h.department }} }</span>
+                    </div>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
+
+        @if (hostControl.invalid && hostControl.touched) {
+          <div class="error-msg">
+            <span>Please select a host employee from the list</span>
+          </div>
+        }
+      </div>
+
+      <div class="step-actions between">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="backToStep1()"
+          id="step2-back-btn"
+        >
+          ← Back (Step 1)
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!isStep2Valid"
+          (click)="nextFromStep2()"
+          id="step2-next-btn"
+        >
+          Next: Review & Submit →
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- STEP 3: REVIEW & SUBMIT -->
+  @if (currentStep() === 3) {
+    <div class="step-content">
+      <h3 class="step-title">Step 3 — Review & Submit</h3>
+      <p class="step-desc">Verify visitor and visit information before issuing registration.</p>
+
+      <div class="review-card">
+        <!-- Visitor Details Section -->
+        <div class="review-section">
+          <div class="review-section-header">
+            <h4>1. Visitor Details</h4>
+            <button
+              type="button"
+              class="btn-edit"
+              (click)="goToStep(1)"
+              id="edit-step1-btn"
+            >
+              ✎ Edit
+            </button>
+          </div>
+          <div class="review-grid">
+            <div class="review-item">
+              <span class="review-label">Full Name:</span>
+              <span class="review-value" id="review-name">{{ nameControl.value }}</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Contact Number:</span>
+              <span class="review-value" id="review-contact">{{ contactControl.value }}</span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="review-divider" />
+
+        <!-- Visit Details Section -->
+        <div class="review-section">
+          <div class="review-section-header">
+            <h4>2. Visit Details</h4>
+            <button
+              type="button"
+              class="btn-edit"
+              (click)="goToStep(2)"
+              id="edit-step2-btn"
+            >
+              ✎ Edit
+            </button>
+          </div>
+          <div class="review-grid">
+            <div class="review-item">
+              <span class="review-label">Purpose:</span>
+              <span class="review-value" id="review-purpose">{{ purposeControl.value }}</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Host Employee:</span>
+              <span class="review-value" id="review-host">
+                @if (selectedHost(); as host) {
+                  {{ host.name }} ({{ host.id }} @if (host.department) { · {{ host.department }} })
+                } @else {
+                  {{ hostControl.value }}
+                }
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-note">
+          <span class="note-icon">ℹ</span>
+          <span>Upon submission, this record will be added as <strong>PENDING</strong> on the Status Board for host approval.</span>
+        </div>
+      </div>
+
+      <div class="step-actions between">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="backToStep2()"
+          id="step3-back-btn"
+        >
+          ← Back (Step 2)
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          [disabled]="isSubmitting() || !wizardForm.valid"
+          (click)="onSubmit()"
+          id="submit-btn"
+        >
+          @if (isSubmitting()) {
+            <span>Submitting...</span>
+          } @else {
+            <span>Submit → PENDING</span>
+          }
+        </button>
+      </div>
+    </div>
+  }
+</div>

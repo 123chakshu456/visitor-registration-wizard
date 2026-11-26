@@ -1,0 +1,62 @@
+<div class="state-diagram-card">
+  <div class="diagram-header">
+    <h3 class="diagram-title">Approval State Machine</h3>
+    <span class="diagram-sub">State Transition Specification</span>
+  </div>
+
+  <div class="fsm-flow">
+    <!-- Main happy path -->
+    <div class="state-node node-pending">
+      <span class="state-badge">PENDING</span>
+      <span class="node-meta">Initial registered state</span>
+    </div>
+
+    <div class="arrow-container">
+      <span class="arrow-down">↓</span>
+      <span class="arrow-label">Host Approves</span>
+    </div>
+
+    <div class="state-node node-approved">
+      <span class="state-badge">APPROVED</span>
+      <span class="node-meta">QR Badge Issued</span>
+    </div>
+
+    <div class="arrow-container">
+      <span class="arrow-down">↓</span>
+      <span class="arrow-label">Kiosk Check-in</span>
+    </div>
+
+    <div class="state-node node-checked-in">
+      <span class="state-badge">CHECKED_IN</span>
+      <span class="node-meta">On Premises</span>
+    </div>
+
+    <div class="arrow-container">
+      <span class="arrow-down">↓</span>
+      <span class="arrow-label">Badge Return</span>
+    </div>
+
+    <div class="state-node node-checked-out">
+      <span class="state-badge">CHECKED_OUT</span>
+      <span class="node-meta">Terminal State</span>
+    </div>
+  </div>
+
+  <div class="fsm-rules">
+    <div class="rule-item rule-denied">
+      <span class="rule-icon">🛑</span>
+      <div>
+        <strong>PENDING → DENIED</strong>
+        <p>Terminal state. Host rejects; security notified. No further transitions allowed.</p>
+      </div>
+    </div>
+
+    <div class="rule-item rule-strict">
+      <span class="rule-icon">🔒</span>
+      <div>
+        <strong>Strict Validation</strong>
+        <p>Illegal transitions blocked at runtime and UI levels.</p>
+      </div>
+    </div>
+  </div>
+</div>

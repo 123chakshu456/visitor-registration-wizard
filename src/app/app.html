@@ -1,0 +1,72 @@
+<div class="app-layout">
+  <!-- Top App Navigation / Header matching Wireframe -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">🏢</div>
+        <div>
+          <h1 class="brand-title">Visitor Management — Approval State Machine</h1>
+          <p class="brand-tagline">Front Desk Wizard &amp; Host Workflow Control</p>
+        </div>
+      </div>
+      <div class="header-kpis">
+        <div class="kpi-pill">
+          <span class="kpi-dot amber">●</span>
+          <span class="kpi-label">Pending:</span>
+          <strong>{{ pendingCount() }}</strong>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-dot blue">●</span>
+          <span class="kpi-label">On Premises:</span>
+          <strong>{{ onPremisesCount() }}</strong>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-dot gray">●</span>
+          <span class="kpi-label">Total Today:</span>
+          <strong>{{ allCount() }}</strong>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="main-content">
+    <div class="dashboard-grid">
+      <!-- Left Column: Front Desk Registration Wizard -->
+      <section class="grid-col col-wizard" aria-label="Visitor Registration Wizard">
+        <div class="section-card-header">
+          <span class="section-badge">Front Desk</span>
+          <h2 class="section-heading">Register Visitor</h2>
+        </div>
+        <app-wizard></app-wizard>
+      </section>
+
+      <!-- Middle Column: Host Notification & Pass Simulator (from Wireframe) -->
+      <section class="grid-col col-host-sim" aria-label="Host Notification & Pass Preview">
+        <div class="section-card-header">
+          <span class="section-badge badge-host">Host Portal</span>
+          <h2 class="section-heading">Notification &amp; Pass</h2>
+        </div>
+        <app-host-notification></app-host-notification>
+      </section>
+
+      <!-- Right Column: State Machine FSM Rules (from Wireframe) -->
+      <section class="grid-col col-fsm" aria-label="State Machine Architecture">
+        <div class="section-card-header">
+          <span class="section-badge badge-fsm">State Machine</span>
+          <h2 class="section-heading">Transition Flow</h2>
+        </div>
+        <app-state-diagram></app-state-diagram>
+      </section>
+    </div>
+
+    <!-- Full-Width Bottom Section: Status Board with Stretch Goal Tabs -->
+    <section class="status-board-section" aria-label="Status Board">
+      <app-status-board></app-status-board>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span>Visitor Registration Wizard with Status Board · Angular Implementation</span>
+  </footer>
+</div>
